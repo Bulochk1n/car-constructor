@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chat with admin</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .message-form-container {
+            border-top: 1px solid #ccc;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<header class="border-bottom lh-1 py-3">
+    <div class="container mt-0">
+        <div class="container mt-5">
+            <a class="link-secondary" href="/" type="submit">Home</a><br>
+        </div>
+    </div>
+
+    <div class="container mt-5 chat-container">
+        <h1>Chat with admin</h1>
+        <div th:each="el : ${messages}" class="alert alert-info mt-2 car-container">
+            <div class="car-info">
+                <h3 th:text="${el.sender}"></h3>
+                <p th:text="${el.content}"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="message-form-container">
+        <form action="chat-with-admin/" method="post">
+            <label for="content"></label>
+            <input type="text" id="content" name="Content" class="form-control" required><br>
+            <button type="submit" class="btn btn-success">Send</button>
+        </form>
+    </div>
+</header>
+<script src="/js/chatWithAdmin.js"></script>
+</body>
+</html>

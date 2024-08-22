@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>Orders</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        /* Добавляем фиксированную высоту и скролл для header */
+        header {
+            height: 100vh; /* Высота header установлена на 80% высоты экрана */
+            overflow-y: auto; /* Включаем вертикальную прокрутку */
+        }
+    </style>
+</head>
+<body>
+<header class="border-bottom lh-1 py-3" >
+
+    <div class="container mt-0">
+        <div class="container mt-5">
+            <a class="link-secondary" href="/" type="submit" >Home</a><br>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <h1>Orders</h1>
+        <div th:each="el : ${orders}" class="alert alert-info mt-2 car-container">
+            <div class="car-info">
+                <h3 th:text="${el.carId}"></h3>
+                <p th:text="@{el.username}"></p>
+                <p th:text="${el.price}"></p>
+                <a th:href="'/cars/orders/' + ${el.id}" class="btn btn-success">More info</a>
+            </div>
+        </div>
+    </div>
+</header>
+</body>
+</html>

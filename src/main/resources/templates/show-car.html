@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cars</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.min.js"></script>
+</head>
+<body>
+<a class="link-secondary" href="/cars">Back</a><br>
+
+<header class="border-bottom lh-1 py-3">
+    <header th:insert="~{block/header :: header}"></header>
+
+    <div class="container mt-5">
+        <div th:each="el : ${car}" class="alert alert-info mt-2">
+            <h3 th:text="${el.name}"></h3>
+            <p th:text="${el.specifications}"></p>
+            <p><b>Price: </b> <span th:text="${el.price}"></span></p><br>
+            <form th:action="'/cars/' + ${el.id} + '/remove'" method="post">
+                <button class="btn btn-danger" type="submit" >Delete</button>
+            </form><br>
+            <div class="car-image">
+                <img th:src="${el.shortImagePath}" alt="${el.name}">
+            </div>
+        </div>
+
+        <div class="container mt-5">
+            <a class="link-secondary" th:href="@{'/cars/' + ${car.id} + '/make-order'}" type="submit" >Make order</a><br>
+        </div>
+
+    </div>
+</header>
+</body>
+</html>
+

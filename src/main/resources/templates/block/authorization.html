@@ -1,0 +1,12 @@
+<div class="container mt-0">
+  <div class="container mt-5">
+    <div th:if="${username != null}">
+      <span th:text="'You are authorized as ' + ${username}"></span>
+      <a class="link-secondary" href="/logout" type="submit">Logout</a><br>
+    </div>
+    <div th:if="${username == null}">
+      <a class="link-secondary" href="/new-user" type="submit" >New User</a><br>
+      <a class="link-secondary" href="/login" type="submit" >Login</a>
+    </div>
+  </div>
+</div>

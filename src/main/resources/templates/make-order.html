@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Orders</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+<header class="border-bottom lh-1 py-3">
+    <header th:insert="~{block/header :: header}"></header>
+
+    <div class="container mt-5 mb-5">
+        <h1>Make Order</h1>
+
+        <form th:action="@{'/cars/' + ${car.id} + '/make-order'}" method="post">
+            <label for="customerName">Your name:</label>
+            <input type="text" id="customerName" name="customerName"  class="form-control" required><br>
+
+            <label for="customerAddress">Your address:</label>
+            <input type="text" id="customerAddress" name="customerAddress"  class="form-control" required><br>
+
+            <label for="customerPhone">Your phone:</label>
+            <input type="number" id="customerPhone" name="customerPhone"  class="form-control" required><br>
+
+            <label for="customerEmail">Your email:</label>
+            <input type="text" id="customerEmail" name="customerEmail"  class="form-control" required><br>
+
+            <button type="submit" class="btn btn-success">Finish order</button>
+        </form>
+
+    </div>
+</header>
+</body>
+</html>
