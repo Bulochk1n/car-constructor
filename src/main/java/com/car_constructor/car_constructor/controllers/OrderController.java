@@ -4,7 +4,7 @@ import com.car_constructor.car_constructor.models.Car;
 import com.car_constructor.car_constructor.models.Order;
 import com.car_constructor.car_constructor.services.CarService;
 import com.car_constructor.car_constructor.services.OrderService;
-import com.car_constructor.car_constructor.services.TelegramService;
+import com.car_constructor.car_constructor.services.TelegramOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -26,7 +26,7 @@ public class OrderController {
     private OrderService orderService;
 
     @Autowired
-    private TelegramService telegramService;
+    private TelegramOrderService telegramOrderService;
 
     @GetMapping("/cars/{id}/make-order")
     @PreAuthorize("hasAuthority('ROLE_USER')")
@@ -73,7 +73,7 @@ public class OrderController {
                         order.getCustomerEmail();
 
 
-        telegramService.sendOrderNotification(orderMessage);
+        telegramOrderService.sendOrderNotification(orderMessage);
 
 
 
@@ -112,7 +112,7 @@ public class OrderController {
 
         String orderNotification = "Order with id " + id + " was removed from orders list ";
 
-        telegramService.sendOrderNotification(orderNotification);
+        telegramOrderService.sendOrderNotification(orderNotification);
 
         orderService.deleteOrder(order);
         return "redirect:/cars/orders";
@@ -134,7 +134,7 @@ public class OrderController {
         String orderNotification = "Order with id " + id + " has been completed, car " + car.getName() +
                                     " with id " + order.getCarId() + " was removed from cars list ";
 
-        telegramService.sendOrderNotification(orderNotification);
+        telegramOrderService.sendOrderNotification(orderNotification);
 
         orderService.deleteOrder(order);
         carService.deleteCar(car.getId());

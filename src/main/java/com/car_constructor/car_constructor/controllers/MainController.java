@@ -25,10 +25,11 @@ public class MainController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
-        Long currentUserId = myUserDetailsService.getUserId(currentUserName);
+
 
         if(authentication.isAuthenticated() && !"anonymousUser".equals(currentUserName)) {
             model.addAttribute("username", currentUserName);
+            Long currentUserId = myUserDetailsService.getUserId(currentUserName);
             model.addAttribute("id", currentUserId);
         }
 

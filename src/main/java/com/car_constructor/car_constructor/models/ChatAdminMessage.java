@@ -22,4 +22,6 @@ public class ChatAdminMessage {
     private String content;
     private String sender;
 
+    private String recipient;
+
 }

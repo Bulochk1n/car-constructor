@@ -4,8 +4,8 @@ import com.car_constructor.car_constructor.models.ChatAdminMessage;
 import com.car_constructor.car_constructor.models.ChatMessage;
 import com.car_constructor.car_constructor.models.MessageType;
 import com.car_constructor.car_constructor.repositories.ChatRepository;
-import com.car_constructor.car_constructor.services.MyUserDetailsService;
-import com.car_constructor.car_constructor.services.TelegramService;
+import com.car_constructor.car_constructor.services.TelegramChatService;
+import com.car_constructor.car_constructor.services.TelegramOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Collections;
+import java.util.List;
 
 @Controller
 public class ChatController {
@@ -29,7 +29,7 @@ public class ChatController {
     private ChatRepository chatRepository;
 
     @Autowired
-    private TelegramService telegramService;
+    private TelegramChatService telegramChatService;
 
 
     public ChatController(ChatRepository chatRepository) {
@@ -42,14 +42,12 @@ public class ChatController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
-        System.out.println(currentUserName);
 
         if(authentication.isAuthenticated() && !"anonymousUser".equals(currentUserName)) {
-            System.out.println(currentUserName);
             model.addAttribute("name", currentUserName);
         }
 
-        return "index";
+        return "chat";
     }
 
     @MessageMapping("/chat.sendMessage")
@@ -71,27 +69,29 @@ public class ChatController {
         return chatMessage;
     }
 
-    @GetMapping("/chat-with-admin/{id}")
-    public String openChatWithAdmin(Model model, @PathVariable(value = "id") Long id) {
-        model.addAttribute("id", id);
-        model.addAttribute("messages", chatRepository.findAllById(Collections.singleton(id)));
+    @GetMapping("/chat-with-admin/{username}")
+    public String openChatWithAdmin(Model model, @PathVariable String username) {
+        List<ChatAdminMessage> messages = chatRepository.findBySenderOrRecipient(username, "admin");
+
+
+        model.addAttribute("messages", messages);
+        model.addAttribute("username", username);
         return "chat-with-admin";
     }
 
-    @PostMapping("/chat-with-admin/{id}")
-    public String sendMessageToAdmin(Model model, @PathVariable(value = "id") Long id, @RequestParam("content") String content)  {
+    @PostMapping("/chat-with-admin/{username}")
+    public String sendMessageToAdmin(@PathVariable String username, @RequestParam("content") String content) {
         ChatAdminMessage newMessage = new ChatAdminMessage();
-        newMessage.setType(MessageType.CHAT);
+        newMessage.setSender(username);
+        newMessage.setRecipient("admin");
         newMessage.setContent(content);
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUserName = authentication.getName();
-        newMessage.setSender(currentUserName);
+        newMessage.setType(MessageType.CHAT);
 
         chatRepository.save(newMessage);
 
-        String message = newMessage.getSender() + ": " + content;
-        telegramService.sendChatNotification(message);
-        return "chat-with-admin";
+        // Отправляем сообщение в Telegram
+        telegramChatService.sendChatNotification(username + " : " + content);
+
+        return "redirect:/chat-with-admin/" + username;
     }
 }
